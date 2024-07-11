@@ -16,72 +16,76 @@
     - name: 'add custom homebrew repos'
       community.general.homebrew_tap:
         name: [
-          adoptopenjdk/openjdk,
-          fishtown-analytics/dbt,
           heroku/brew,
           homebrew/cask-versions,
           thoughtbot/formulae,
-          weaveworks/tap,
-        ]
-
+          hashicorp/tap,
+          cloudflare/cloudflare,
+          d12frosted/emacs-plus,
+         ]
     - name: Install core packages via brew casks
       community.general.homebrew_cask:
         name: "{{ item }}"
       ignore_errors: yes
       with_items:
         - 1password
-        - android-sdk
-        - android-studio
-        - datagrip
+        - 1password-cli
+        - cloudflare/cloudflare/cf-terraforming
         - docker
         - dropbox
-        - figma
+        - font-fira-code
+        - font-fira-mono
+        - font-fira-sans
         - google-chrome
         - google-cloud-sdk
+        - firefox
         - iterm2
         - kindle
         - ngrok
-        - slack
-        - sublime-text
+        - tailscale
         - telegram
-        - visual-studio-code
-        - vlc
         - zoom
-        - tuple
 
     - name: "Install homebrew packages"
       community.general.homebrew:
         name: [
+          'ag',
+          'age',
+          'aichat',
           'autoconf',
           'automake',
           'aws-iam-authenticator',
           'awscli',
           'bfg',
+          'chruby'
           'coreutils',
-          'curl',
-          'dbt@0.18.0',
+          'curl', 
           'direnv',
           'dnsmasq',
+          'doctl',
           'fzf',
+          'gcc',
           'gnu-time',
           'gpg',
-          'heroku',
+          'hashicorp/tap/terraform',
           'htop',
           'imagemagick@6',
-          'kubectx',
-          'kubernetes-cli',
-          'kubernetes-helm',
           'libtool',
           'libxslt',
           'libyaml',
           'mas',
+          'mysql@8.0',
+          'nmap',
+          'nushell',
+          'nvm',
           'openssl' ,
           'pkg-config',
-          'postgresql',
           'rcm',
           'readline',
           'redis',
+          'ruby-install',
           'sqlite3',
+          'the_silver_searcher',
           'tmux',
           'unixodbc',
           'unzip',
@@ -94,6 +98,12 @@
         ]
         state: present
         update_homebrew: yes
+
+   - name: "Install emacs"
+     community.general.homebrew:
+       name: emacs-plus
+       state: present
+       install_options: with-native-comp
 
     - name: "Install from Mac app store"
       shell: mas install {{ item }}
@@ -126,46 +136,7 @@
         dest: /Users/{{ lookup('env', 'USER') }}/.zshrc
         owner: "{{ lookup('env', 'USER') }}"
         force: yes
-
-    - name: Create a default VSCode configuration
-      template:
-        src: templates/vscode-settings.json.j2
-        dest: /Users/{{ lookup('env', 'USER') }}/Library/Application Support/Code/User/settings.json
-        owner: "{{ lookup('env', 'USER') }}"
-        force: yes
-
-    - name: Create a default VSCode keuybinding configuration
-      template:
-        src: templates/vscode-keybindings.json.j2
-        dest: /Users/{{ lookup('env', 'USER') }}/Library/Application Support/Code/User/keybindings.json
-        owner: "{{ lookup('env', 'USER') }}"
-        force: yes
-
-    # Add something which ensures path is set here
-    - name: Install VSCode extensions
-      shell: code --install-extension {{ item }}
-      with_items:
-        - apollographql.vscode-apollo
-        - bradlc.vscode-tailwindcss
-        - castwide.solargraph
-        - clinyong.vscode-css-modules
-        - eamodio.gitlens
-        - jakebecker.elixir-ls
-        - kaiwood.endwise
-        - karunamurti.haml
-        - ms-vscode-remote.vscode-remote-extensionpack
-        - ms-vscode.vscode-typescript-tslint-plugin
-        - msjsdiag.debugger-for-chrome
-        - rebornix.ruby
-        - richie5um2.vscode-sort-json
-        - Tyriar.sort-lines
-        - vscodevim.vim
-        - wholroyd.jinja
-        - wingrunr21.vscode-ruby
-        - xabikos.javascriptsnippets
-        - streetsidesoftware.code-spell-checker
-        - fabiospampinato.vscode-todo-plus
-
+        
     - git:
         repo: https://github.com/asdf-vm/asdf.git
         dest: "/Users/{{ lookup('env', 'USER') }}/.asdf"
@@ -192,16 +163,16 @@
     - name: "Install Default Python"
       shell: |
         source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
-        asdf install python 3.10.0
-        asdf global python 3.10.0
+        asdf install python 3.12.3
+        asdf global python 3.12.3
         pip3 install ansible
         asdf reshim python
 
     - name: "Install Default Ruby"
       shell: |
         source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
-        asdf install ruby 3.0.2
-        asdf global ruby 3.0.2
+        asdf install ruby 3.3.4
+        asdf global ruby 3.3.4
         gem install bundler
         gem install cocoapods
         gem install rubocop
@@ -227,15 +198,6 @@
         asdf install elixir 1.12.3-otp-24
         asdf global elixir 1.12.3-otp-24
         mix local.hex --force
-
-    - name: Install yarn packages
-      shell: yarn global add {{ item }}
-      with_items:
-        - react-native-cli
-        - create-react-app
-        - apollo
-        - generator-generator
-        - yo
         
     - name: re-generate bins now we've installed some yarn packages
       shell: asdf reshim nodejs
