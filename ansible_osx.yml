@@ -65,6 +65,7 @@
           'doctl',
           'fzf',
           'gcc',
+          'gh',
           'gnu-time',
           'gpg',
           'hashicorp/tap/terraform',
