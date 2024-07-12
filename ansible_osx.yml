@@ -101,12 +101,13 @@
         state: present
         update_homebrew: yes
 
-   - name: "Install emacs"
-     community.general.homebrew:
-       name: emacs-plus
-       state: present
-       install_options: with-native-comp
-
+    - name: "Install emacs"
+      community.general.homebrew:
+        name: emacs-plus
+        state: present
+        install_options: with-native-comp
+        update_homebrew: yes
+        
     - name: "Install from Mac app store"
       shell: mas install {{ item }}
       with_items:
