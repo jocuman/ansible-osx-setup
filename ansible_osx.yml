@@ -57,7 +57,7 @@
           'aws-iam-authenticator',
           'awscli',
           'bfg',
-          'chruby'
+          'chruby',
           'cloudflare/cloudflare/cf-terraforming',
           'coreutils',
           'curl', 
