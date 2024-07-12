@@ -39,9 +39,11 @@
         - firefox
         - iterm2
         - kindle
+        - magnet
         - ngrok
         - tailscale
         - telegram
+        - wireguard
         - zoom
 
     - name: "Install homebrew packages"
