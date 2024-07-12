@@ -17,7 +17,6 @@
       community.general.homebrew_tap:
         name: [
           heroku/brew,
-          homebrew/cask-versions,
           thoughtbot/formulae,
           hashicorp/tap,
           cloudflare/cloudflare,
