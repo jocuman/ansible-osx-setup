@@ -39,11 +39,9 @@
         - firefox
         - iterm2
         - kindle
-        - magnet
         - ngrok
         - tailscale
         - telegram
-        - wireguard
         - zoom
 
     - name: "Install homebrew packages"
@@ -112,7 +110,8 @@
       shell: mas install {{ item }}
       with_items:
         - 497799835 # xcode
-
+        - 441258766 # magnet
+        - 1451685025 # wireguard
     - name: Get the path to ZSH
       become: false
       local_action: command which zsh
