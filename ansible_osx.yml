@@ -29,11 +29,13 @@
       with_items:
         - 1password
         - 1password-cli
+        - brave-browser
         - docker
         - dropbox
         - font-fira-code
         - font-fira-mono
         - font-fira-sans
+        - font-jetbrains-mono
         - google-chrome
         - google-cloud-sdk
         - firefox
@@ -51,6 +53,7 @@
           'age',
           'aichat',
           'autoconf',
+          'autojump',
           'automake',
           'aws-iam-authenticator',
           'awscli',
@@ -69,7 +72,7 @@
           'gpg',
           'hashicorp/tap/terraform',
           'htop',
-          'imagemagick@6',
+          'imagemagick@6',          
           'libtool',
           'libxslt',
           'libyaml',
@@ -105,7 +108,66 @@
         state: present
         install_options: with-native-comp
         update_homebrew: yes
-        
+
+    - name: "Download Doom Emacs"
+      ansible.builtin.git:
+        clone: true
+        repo: https://github.com/doomemacs/doomemacs
+        depth: 1
+        dest: "{{ lookup('env', 'HOME') }}/.config/emacs"
+
+    - name: "Download all-the-icons"
+      ansible.builtin.git:
+        clone: true
+        repo: https://github.com/domtronn/all-the-icons.el
+        dest: /tmp/all-the-icons-fonts
+      environment:
+        GIT_TERMINAL_PROMPT: 0
+        GIT_ASKPASS: /bin/true
+
+    - name: "Copy all-the-icons-fonts"
+      ansible.builtin.copy:
+        src: /tmp/all-the-icons-fonts/fonts
+        dest: "{{ lookup('env', 'HOME') }}/.local/share/fonts"
+        backup: true
+
+    - name: "Clean up /tmp/all-the-icons-fonts"
+      ansible.builtin.file:
+        path: /tmp/all-the-icons-fonts
+        state: absent
+
+    - name: "Download nerd-icons (NFM.ttf)"
+      ansible.builtin.git:
+        clone: true
+        repo: https://github.com/rainstormstudio/nerd-icons.el
+        dest: /tmp/nerd-icons-fonts
+      environment:
+        GIT_TERMINAL_PROMPT: 0
+        GIT_ASKPASS: /bin/true
+
+    - name: "Copy nerd-icons (NFM.ttf)"
+      ansible.builtin.copy:
+        src: /tmp/nerd-icons-fonts/fonts/NFM.ttf
+        dest: "{{ lookup('env', 'HOME') }}/.local/share/fonts"
+        backup: true
+
+    - name: "Clean up /tmp/nerd-icons-fonts"
+      ansible.builtin.file:
+        path: /tmp/nerd-icons-fonts
+        state: absent
+
+    - name: "Install Doom Emacs"
+      ansible.builtin.shell:
+        cmd: "{{ lookup('env', 'HOME') }}/.config/emacs/bin/doom install --config --env --install --fonts --hooks --color --force"
+      args:
+        executable: /bin/bash
+
+    - name: "Run doom sync"
+      ansible.builtin.shell:
+        cmd: "{{ lookup('env', 'HOME') }}/.config/emacs/bin/doom sync"
+      args:
+        executable: /bin/bash
+
     - name: "Install from Mac app store"
       shell: mas install {{ item }}
       with_items:
@@ -140,11 +202,15 @@
         dest: /Users/{{ lookup('env', 'USER') }}/.zshrc
         owner: "{{ lookup('env', 'USER') }}"
         force: yes
+
+    - git:
+        repo: https://github.com/romkatv/powerlevel10k.git
+        depth: 1
+        dest: "/Users/{{ lookup('env', 'USER') }}/.oh-my-zsh/themes/powerlevel10k"
         
     - git:
         repo: https://github.com/asdf-vm/asdf.git
         dest: "/Users/{{ lookup('env', 'USER') }}/.asdf"
-        version: v0.8.1
 
     - name: "Create a default asdf configuration"
       template:
@@ -162,21 +228,20 @@
         - elixir
         - nodejs
         - python
-        - erlang
 
     - name: "Install Default Python"
       shell: |
         source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
-        asdf install python 3.12.3
-        asdf global python 3.12.3
+        asdf install python latest
+        asdf global python latest
         pip3 install ansible
         asdf reshim python
 
     - name: "Install Default Ruby"
       shell: |
         source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
-        asdf install ruby 3.3.4
-        asdf global ruby 3.3.4
+        asdf install ruby latest
+        asdf global ruby latest
         gem install bundler
         gem install cocoapods
         gem install rubocop
@@ -186,23 +251,9 @@
       shell: |
         source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
         bash /Users/{{ lookup('env', 'USER') }}/.asdf/plugins/nodejs/bin/import-release-team-keyring
-        asdf install nodejs 16.4.2
-        asdf global nodejs 16.4.2
+        asdf install nodejs latest
+        asdf global nodejs latest
 
-    - name: "Install default erlang"
-      shell: |
-        source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
-        asdf install erlang 24.0.2
-        asdf global  erlang 24.0.2
-
-
-    - name: "Install default elixir"
-      shell: |
-        source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
-        asdf install elixir 1.12.3-otp-24
-        asdf global elixir 1.12.3-otp-24
-        mix local.hex --force
-        
     - name: re-generate bins now we've installed some yarn packages
       shell: asdf reshim nodejs
         
