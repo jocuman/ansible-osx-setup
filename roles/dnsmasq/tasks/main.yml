@@ -4,7 +4,7 @@
     state: present
     update_homebrew: true
 
-- name: "Get config directory"
+- name: "Get config directory"  #
   shell:
     cmd: echo "$(brew --prefix)/etc/"
   register: config_directory
