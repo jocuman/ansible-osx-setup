@@ -21,6 +21,7 @@
           hashicorp/tap,
           cloudflare/cloudflare,
           d12frosted/emacs-plus,
+          macos-fuse-t/homebrew-cask
          ]
     - name: Install core packages via brew casks
       community.general.homebrew_cask:
@@ -30,18 +31,22 @@
         - 1password
         - 1password-cli
         - brave-browser
+        - cryptomator
         - docker
         - dropbox
         - font-fira-code
         - font-fira-mono
         - font-fira-sans
         - font-jetbrains-mono
+        - fuse-t
+        - fuse-t-sshfs
         - google-chrome
         - google-cloud-sdk
         - firefox
         - karabiner-elements
         - iterm2
         - kindle
+        - libreoffice
         - ngrok
         - tailscale
         - telegram
@@ -73,7 +78,8 @@
           'gpg',
           'hashicorp/tap/terraform',
           'htop',
-          'imagemagick@6',
+          'imagemagick',
+          'libb2',
           'libffi',
           'libtool',
           'libxslt',
@@ -88,6 +94,7 @@
           'rcm',
           'readline',
           'redis',
+          'ripgrep',
           'sqlite3',
           'the_silver_searcher',
           'tmux',
@@ -259,23 +266,22 @@
         asdf plugin-add {{ item }} || exit 0
       with_items:
         - ruby
-        - elixir
         - nodejs
         - python
 
     - name: "Install Default Python"
       shell: |
         source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
-        asdf install python latest
-        asdf global python latest
+        asdf install python 3.12.3
+        asdf global python 3.12.3
         pip3 install ansible
         asdf reshim python
 
     - name: "Install Default Ruby"
       shell: |
         source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
-        asdf install ruby latest
-        asdf global ruby latest
+        asdf install ruby 3.3.6
+        asdf global ruby 3.3.6
         gem install bundler
         gem install cocoapods
         gem install rubocop
@@ -287,6 +293,37 @@
         bash /Users/{{ lookup('env', 'USER') }}/.asdf/plugins/nodejs/bin/import-release-team-keyring
         asdf install nodejs latest
         asdf global nodejs latest
+
+    - name: Create aws config directory
+      file:
+        path: /Users/{{ lookup('env', 'USER') }}/.aws
+        state: directory
+
+    - name: "Create a default AWS configuration"
+      template:
+        src: templates/aws_config.j2
+        dest: /Users/{{ lookup('env', 'USER') }}/.aws/config
+        owner: "{{ lookup('env', 'USER') }}"
+        force: yes
+
+    - name: "Create AWS credentials from vault"
+      template:
+        src: vaults/aws.j2
+        dest: /Users/{{ lookup('env', 'USER') }}/.aws/credentials
+        owner: "{{ lookup('env', 'USER') }}"
+        force: yes
+
+    - name: Create ngrok config directory
+      file:
+        path: /Users/{{ lookup('env', 'USER') }}/Library/Application Support/ngrok
+        state: directory
+
+    - name: "Create ngrok config file"
+      template:
+        src: vaults/ngrok.yml.j2
+        dest: /Users/{{ lookup('env', 'USER') }}/Library/Application Support/ngrok/ngrok.yml
+        owner: "{{ lookup('env', 'USER') }}"
+        force: yes
 
     - name: re-generate bins now we've installed some yarn packages
       shell: asdf reshim nodejs
