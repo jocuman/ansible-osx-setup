@@ -248,6 +248,24 @@
         repo: https://github.com/romkatv/powerlevel10k.git
         depth: 1
         dest: "/Users/{{ lookup('env', 'USER') }}/.oh-my-zsh/themes/powerlevel10k"
+
+    - name: Create p10k ymbolic link
+      file:
+        src: /Users/jorge/Library/Mobile Documents/com~apple~CloudDocs/arbeitsstation/p10k.zsh
+        dest: "/Users/{{ lookup('env', 'USER') }}/.p10k.zsh"
+        state: link
+
+    - name: Create zshrc.personal.after symbolic link
+      file:
+        src: /Users/jorge/Library/Mobile Documents/com~apple~CloudDocs/arbeitsstation/zshrc
+        dest: "/Users/{{ lookup('env', 'USER') }}/.zshrc.personal.after"
+        state: link
+
+    - name: Create zshenv symbolic link
+      file:
+        src: /Users/jorge/Library/Mobile Documents/com~apple~CloudDocs/arbeitsstation/zshenv
+        dest: "/Users/{{ lookup('env', 'USER') }}/.zshenv"
+        state: link
         
     - git:
         repo: https://github.com/asdf-vm/asdf.git
@@ -324,6 +342,20 @@
         dest: /Users/{{ lookup('env', 'USER') }}/Library/Application Support/ngrok/ngrok.yml
         owner: "{{ lookup('env', 'USER') }}"
         force: yes
+
+    - name: Create iterm scripts directory
+      file:
+        path: /Users/{{ lookup('env', 'USER') }}/Library/Application Support/iTerm2/Scripts
+        state: directory
+
+    - name: "Add iterm default scripts"
+      template:
+        src: "{{ item }}"
+        dest: /Users/{{ lookup('env', 'USER') }}/Library/Application Support/iTerm2/Scripts/{{ item | basename | regex_replace('\.j2$', '') }}
+        owner: "{{ lookup('env', 'USER') }}"
+        force: yes
+      with_fileglob:
+        - ../templates/iterm_scripts/*.j2
 
     - name: re-generate bins now we've installed some yarn packages
       shell: asdf reshim nodejs

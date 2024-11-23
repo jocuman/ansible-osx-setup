@@ -1,0 +1,218 @@
+# Comandos para abrir sesiones subsequentes de
+# ssh al mismo host con el mismo pipe
+#
+# Host *
+
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519
+  ForwardAgent yes
+  ControlMaster auto
+  ControlPath /tmp/ssh_mux_%h_%p_%r
+  IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+
+Include config.d/*
+
+# Match host * exec "test ${#SSH_CONNECTION} == 0"
+#   IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+
+Host l201
+     User caves
+
+Host cacti
+     User caves
+
+Host radius
+     User caves
+     PubkeyAuthentication no
+
+Host latinotopup.com
+     User production
+     Port 2211
+
+Host latino
+     User production
+     Port 2211
+
+Host recargator
+     Port 2211
+
+Host git
+     Hostname 192.168.17.212
+     User jorge
+     Port 2211
+     IdentitiesOnly=yes
+
+Host git.logicaltelecom.net
+     User jorge
+     Port 2211
+     IdentitiesOnly=yes
+
+Host db1
+     Hostname 192.168.17.201
+     User deployer
+
+Host db2
+     Hostname 192.168.17.202
+     User deployer
+
+Host db3
+     Hostname 192.168.17.203
+     User deployer
+     Port 22
+
+Host db4
+     Hostname 192.168.17.204
+     User deployer
+     Port 22
+
+Host db5
+     Hostname 192.168.17.205
+     User deployer
+     Port 22
+
+Host db6
+     Hostname sandbox.logicaltelecom.net
+     User deployer
+     Port 21722 
+
+Host db6app9
+     Hostname 192.168.20.206
+     User deployer
+     Port 22
+     ProxyJump deployer@app9
+
+Host 192.168.20.206
+     Hostname 192.168.20.206
+     User deployer
+     Port 22
+     ProxyJump deployer@app9
+
+Host app1
+     Hostname 192.168.17.101
+     User deployer
+     Port 22
+
+Host app2
+     Hostname 192.168.17.102
+     User deployer
+     Port 22
+
+Host app3
+     Hostname 192.168.17.103
+     User deployer
+     Port 22
+
+Host app4
+     Hostname 192.168.17.104
+     User deployer
+     Port 22
+
+Host app5
+     Hostname 192.168.17.105
+     User deployer
+     Port 22
+
+Host app6
+     Hostname 192.168.17.106
+     User deployer
+     Port 22
+
+Host app7
+     Hostname 192.168.17.107
+     User deployer
+     Port 22
+
+Host app8
+     Hostname 192.168.17.108
+     User deployer              
+     Port 22
+
+Host app9
+     Hostname 192.168.17.109
+     User deployer              
+     Port 22
+
+Host app10
+    hostname 10.116.0.9
+    user deployer
+    stricthostkeychecking no
+    proxyjump root@is_gateway1
+
+Host app11
+    hostname 10.116.0.12
+    user deployer
+    stricthostkeychecking no
+    proxyjump root@is_gateway1
+
+Host graphite1
+     Hostname 200.23.90.80
+     User deployer
+     Port 22
+
+Host cruncher1
+     Hostname 192.168.17.211
+     User deployer
+
+Host cruncher2
+     Hostname 192.168.17.212
+     User deployer
+     Port 2211
+
+Host staging.latinotopup.com
+     User deployer
+     Port 2211
+
+Host prepaid.logicaltelecom.net
+     User devel
+     Port 22
+
+Host openvpn
+     Hostname 208.74.160.90
+     User deployer
+     Port 22
+
+Host asterisk
+    Hostname 208.74.160.200
+    User root
+
+Host asteriskcs
+    Hostname 208.74.160.204
+    User root
+
+Host unifi
+    Hostname unifi.cuevas.mx
+    User deployer
+
+Host haproxy
+    Hostname 200.23.90.130
+    User deployer
+    ProxyJump deployer@openvpn
+
+Host bkp1
+    Hostname 192.168.17.181
+    User deployer
+
+Host bkp2
+    Hostname 192.168.17.182
+    User deployer
+
+Host bkpsat
+    Hostname 99.40.226.132
+    User deployer
+    Port 22
+
+Host zammad
+    Hostname 68.183.137.240
+    User root
+
+Host loggy
+    hostname 10.116.0.4
+    user root
+    stricthostkeychecking no
+    proxyjump nyc_gateway1
+
+Host nyc_gateway1
+    hostname 143.198.190.99
+    user root
