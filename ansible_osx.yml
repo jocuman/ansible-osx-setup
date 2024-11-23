@@ -1,6 +1,7 @@
 ---
 - hosts: localhost
   tasks:
+    - include_vars: vars/versions.yml
     - name: Install homebrew
       include_role:
         name: geerlingguy.mac.homebrew
@@ -290,16 +291,16 @@
     - name: "Install Default Python"
       shell: |
         source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
-        asdf install python 3.12.3
-        asdf global python 3.12.3
+        asdf install python '{{ python_version }}'
+        asdf global python '{{ python_version }}'
         pip3 install ansible
         asdf reshim python
 
     - name: "Install Default Ruby"
       shell: |
         source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
-        asdf install ruby 3.3.6
-        asdf global ruby 3.3.6
+        asdf install ruby '{{ ruby_version }}'
+        asdf global ruby '{{ ruby_version }}'
         gem install bundler
         gem install cocoapods
         gem install rubocop
