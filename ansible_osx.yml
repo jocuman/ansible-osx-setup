@@ -145,6 +145,11 @@
         dest: /etc/resolver/test
       become: true
 
+    - name: Create dnsmasq latino topup config
+      template:
+        src: latino_topup.conf.j2
+        dest: "{{  config_directory.stdout | trim }}/dnsmasq.d/latino_topup.conf"
+
     - name: "Install emacs"
       community.general.homebrew:
         name: emacs-plus
@@ -204,16 +209,17 @@
         cmd: "{{ lookup('env', 'HOME') }}/.config/emacs/bin/doom install --config --env --install --fonts --hooks --color --force"
       args:
         executable: /bin/bash
-    
-    - stat:
-      path: "/Users/{{ lookup('env', 'USER') }}/.config/doom"
+        
+    - name: "Check if doom default config exists"
+      ansible.builtin.stat:
+        path: "{{ lookup('env', 'HOME') }}/.config/doom/"
       register: doom_original_config
-    
+
     - name: Delete content & directory of original config
       ansible.builtin.file:
         state: absent
         path: "/Users/{{ lookup('env', 'USER') }}/.config/doom"
-        when: doom_original_config.stat is defined and doom_original_config.stat.islnk is not defined
+      when: doom_original_config.stat.isdir is defined and doom_original_config.stat.islnk is defined and doom_original_config.stat.isdir and doom_original_config.stat.islnk == False
 
     - name: Create doom config symbolic link
       file:
