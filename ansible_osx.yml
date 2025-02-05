@@ -60,6 +60,7 @@
           'ag',
           'age',
           'aichat',
+          'asdf',
           'autoconf',
           'autojump',
           'automake',
@@ -203,6 +204,22 @@
         cmd: "{{ lookup('env', 'HOME') }}/.config/emacs/bin/doom install --config --env --install --fonts --hooks --color --force"
       args:
         executable: /bin/bash
+    
+    - stat:
+      path: "/Users/{{ lookup('env', 'USER') }}/.config/doom"
+      register: doom_original_config
+    
+    - name: Delete content & directory of original config
+      ansible.builtin.file:
+        state: absent
+        path: "/Users/{{ lookup('env', 'USER') }}/.config/doom"
+        when: doom_original_config.stat is defined and doom_original_config.stat.islnk is not defined
+
+    - name: Create doom config symbolic link
+      file:
+        src: /Users/jorge/Library/Mobile Documents/com~apple~CloudDocs/arbeitsstation/config/doom
+        dest: "/Users/{{ lookup('env', 'USER') }}/.config/doom"
+        state: link
 
     - name: "Run doom sync"
       ansible.builtin.shell:
@@ -274,10 +291,6 @@
         dest: "/Users/{{ lookup('env', 'USER') }}/.ssh/config"
         state: link
         
-    - git:
-        repo: https://github.com/asdf-vm/asdf.git
-        dest: "/Users/{{ lookup('env', 'USER') }}/.asdf"
-
     - name: "Create a default asdf configuration"
       template:
         src: templates/.asdfrc.j2
