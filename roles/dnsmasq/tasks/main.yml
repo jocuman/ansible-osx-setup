@@ -31,6 +31,11 @@
     dest: /etc/resolver/localhost
   become: true
 
+- name: Create latino topup config 
+  template:
+    src: latino_topup.conf.j2
+    dest: "{{  config_directory.stdout | trim }}/dnsmasq.d/latino_topup.conf"
+
 - name: Notes
   debug:
     msg: "Remember must be started with sudo, e.g. sudo brew services start dnsmasq"
