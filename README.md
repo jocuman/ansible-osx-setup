@@ -3,6 +3,11 @@
 This repository contains an Ansible configuration for setting up a Mac from scratch. It's primary purpose is setting up a new Mac from scratch, but I endeavor to also use it for adding new software as I go so that it remains up to date. At the moment it's being used for setting up M1 based Macs running MacOS Monterey.
 
 ## Getting Started
+We assume the following:
+1. Config files are stored in iCloud
+
+Before running anything follow this steps:
+1. Go to Finder Settings and enable sync Desktop & Documents folders
 
 There's a simple shell script in `bin/bootstrap` which will perform the initial steps of:
 
