@@ -267,6 +267,12 @@
         src: /Users/jorge/Library/Mobile Documents/com~apple~CloudDocs/arbeitsstation/zshenv
         dest: "/Users/{{ lookup('env', 'USER') }}/.zshenv"
         state: link
+
+    - name: Create ssh config symbolic link
+      file:
+        src: /Users/jorge/Library/Mobile Documents/com~apple~CloudDocs/arbeitsstation/ssh/config
+        dest: "/Users/{{ lookup('env', 'USER') }}/.ssh/config"
+        state: link
         
     - git:
         repo: https://github.com/asdf-vm/asdf.git
