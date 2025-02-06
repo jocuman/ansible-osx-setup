@@ -98,6 +98,7 @@
           'redis',
           'ripgrep',
           'sqlite3',
+          'starship',
           'the_silver_searcher',
           'tmux',
           'unixodbc',
@@ -306,8 +307,7 @@
 
     - name: "Install asdf plugins"
       shell: |
-        source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
-        asdf plugin-add {{ item }} || exit 0
+        asdf plugin add {{ item }} || exit 0
       with_items:
         - ruby
         - nodejs
@@ -315,7 +315,6 @@
 
     - name: "Install Default Python"
       shell: |
-        source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
         asdf install python '{{ python_version }}'
         asdf global python '{{ python_version }}'
         pip3 install ansible
@@ -323,17 +322,14 @@
 
     - name: "Install Default Ruby"
       shell: |
-        source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
         asdf install ruby '{{ ruby_version }}'
         asdf global ruby '{{ ruby_version }}'
         gem install bundler
         gem install cocoapods
         gem install rubocop
-        gem install solargraph
 
     - name: "Install default node"
       shell: |
-        source /Users/{{ lookup('env', 'USER') }}/.asdf/asdf.sh
         bash /Users/{{ lookup('env', 'USER') }}/.asdf/plugins/nodejs/bin/import-release-team-keyring
         asdf install nodejs latest
         asdf global nodejs latest
