@@ -389,3 +389,13 @@
     - name: Notes
       debug:
         msg: "Remember must be started with sudo, e.g. sudo brew services start dnsmasq"
+
+    - name: "Check emacs link is created"
+      ansible.builtin.stat:
+        path: "/Applications/Emacs.app"
+      register: emacs_link
+
+    - name: Notes
+      debug:
+        msg: "Remember to create emacs link, run brew info emacs-plus for instructions."
+      when: emacs_link.stat.exists == False
