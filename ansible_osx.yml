@@ -327,6 +327,7 @@
         gem install bundler
         gem install cocoapods
         gem install rubocop
+        gem install foreman
 
     - name: "Install default node"
       shell: |
