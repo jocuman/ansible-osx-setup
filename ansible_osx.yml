@@ -33,6 +33,7 @@
         - 1password-cli
         - brave-browser
         - cryptomator
+        - cyberduck
         - docker
         - dropbox
         - font-fira-code
@@ -69,7 +70,7 @@
           'bfg',
           'cloudflare/cloudflare/cf-terraforming',
           'coreutils',
-          'curl', 
+          'curl',
           'direnv',
           'dnsmasq',
           'doctl',
@@ -146,6 +147,12 @@
         dest: /etc/resolver/test
       become: true
 
+    - name: Create dnsmasq test resolver
+      template:
+        src: local-resolver.j2
+        dest: /etc/resolver/asdf
+      become: true
+
     - name: Create dnsmasq latino topup config
       template:
         src: latino_topup.conf.j2
@@ -210,7 +217,7 @@
         cmd: "{{ lookup('env', 'HOME') }}/.config/emacs/bin/doom install --config --env --install --fonts --hooks --color --force"
       args:
         executable: /bin/bash
-        
+
     - name: "Check if doom default config exists"
       ansible.builtin.stat:
         path: "{{ lookup('env', 'HOME') }}/.config/doom/"
@@ -241,7 +248,7 @@
         - 441258766 # magnet
         - 1451685025 # wireguard
         - 1569813296 # 1password for safari
-        
+
     - name: Get the path to ZSH
       become: false
       local_action: command which zsh
@@ -297,7 +304,7 @@
         src: /Users/jorge/Library/Mobile Documents/com~apple~CloudDocs/arbeitsstation/ssh/config
         dest: "/Users/{{ lookup('env', 'USER') }}/.ssh/config"
         state: link
-        
+
     - name: "Create a default asdf configuration"
       template:
         src: templates/.asdfrc.j2
@@ -389,7 +396,7 @@
 
     - name: Notes
       debug:
-        msg: "Remember must be started with sudo, e.g. sudo brew services start dnsmasq"
+        msg: "Remember must be restarted with sudo, e.g. sudo brew services start dnsmasq"
 
     - name: "Check emacs link is created"
       ansible.builtin.stat:
