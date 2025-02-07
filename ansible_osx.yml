@@ -322,19 +322,21 @@
 
     - name: "Install Default Python"
       shell: |
-        asdf install python '{{ python_version }}'
-        asdf global python '{{ python_version }}'
+        asdf install python '{{ item }}'
+        asdf global python '{{ item }}'
         pip3 install ansible
         asdf reshim python
+      loop: "{{ python_version }}"
 
     - name: "Install Default Ruby"
       shell: |
-        asdf install ruby '{{ ruby_version }}'
-        asdf global ruby '{{ ruby_version }}'
+        asdf install ruby '{{ item }}'
+        asdf global ruby '{{ item }}'
         gem install bundler
         gem install cocoapods
         gem install rubocop
         gem install foreman
+      loop: "{{ ruby_version }}"
 
     - name: "Install default node"
       shell: |
